@@ -10,8 +10,10 @@ export interface FileWatcherCallbacks {
   onRushBuildEnd?(): void;
 }
 
-// Rush lock file that indicates a build is in progress
-const RUSH_LOCK_FILE = "common/temp/rush-lock.txt";
+// Rush lock file patterns:
+// - "rush#29975.lock" (with PID)
+// - "rush.lock" (without PID)
+const RUSH_LOCK_DIR = "common/temp";
 
 export class FileWatcher {
   private watcher: chokidar.FSWatcher | undefined;
@@ -112,31 +114,54 @@ export class FileWatcher {
       return;
     }
 
-    const rushLockPath = path.join(this.rushRootPath, RUSH_LOCK_FILE);
+    const rushLockDir = path.join(this.rushRootPath, RUSH_LOCK_DIR);
 
-    // Check if rush lock exists initially
-    if (fs.existsSync(rushLockPath)) {
+    // Check if any rush lock exists initially
+    if (this.hasRushLockFiles(rushLockDir)) {
       this.onRushStart();
     }
 
-    // Watch for the rush lock file
-    this.rushWatcher = chokidar.watch(rushLockPath, {
+    // Watch for rush lock files (rush#*.lock and rush.lock)
+    this.rushWatcher = chokidar.watch(
+      [
+        path.join(rushLockDir, "rush#*.lock"),
+        path.join(rushLockDir, "rush.lock"),
+      ],
+      {
       persistent: true,
       ignoreInitial: true,
     });
 
     this.rushWatcher.on("add", () => this.onRushStart());
-    this.rushWatcher.on("unlink", () => this.onRushEnd());
+    this.rushWatcher.on("unlink", () => {
+      // Only end if no more lock files exist (multiple Rush processes possible)
+      if (!this.hasRushLockFiles(rushLockDir)) {
+        this.onRushEnd();
+      }
+    });
 
     // Also poll periodically as a fallback (lock file detection can be unreliable)
     this.rushLockCheckInterval = setInterval(() => {
-      const lockExists = fs.existsSync(rushLockPath);
+      const lockExists = this.hasRushLockFiles(rushLockDir);
       if (lockExists && !this.isPaused) {
         this.onRushStart();
       } else if (!lockExists && this.isPaused) {
         this.onRushEnd();
       }
     }, 2000);
+  }
+
+  private hasRushLockFiles(rushLockDir: string): boolean {
+    try {
+      if (!fs.existsSync(rushLockDir)) return false;
+      const files = fs.readdirSync(rushLockDir);
+      return files.some(
+        (f) =>
+          f === "rush.lock" || (f.startsWith("rush#") && f.endsWith(".lock"))
+      );
+    } catch {
+      return false;
+    }
   }
 
   private onRushStart(): void {
