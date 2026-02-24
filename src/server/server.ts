@@ -9,6 +9,7 @@ import {
 } from "vscode-languageserver/node";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { getDefinition, Logger } from "./definitionProvider";
+import { getHover, invalidateHoverCache } from "./hoverProvider";
 import { TsconfigResolver } from "./tsconfigResolver";
 import { ModuleResolver } from "./moduleResolver";
 import { SymbolIndex } from "./symbolIndex";
@@ -70,15 +71,18 @@ connection.onInitialize((params: InitializeParams): InitializeResult => {
     onTsFileChange(filePath: string) {
       symbolIndex.invalidate(filePath);
       moduleResolver.invalidateFile(filePath);
+      invalidateHoverCache(filePath);
       logger.info(`[filewatcher] TS file changed: ${filePath}`);
     },
     onTsconfigChange(filePath: string) {
       tsconfigResolver.invalidate(filePath);
       moduleResolver.invalidateAll();
+      invalidateHoverCache();
       logger.info(`[filewatcher] tsconfig changed: ${filePath}`);
     },
     onPackageJsonChange(filePath: string) {
       moduleResolver.invalidateAll();
+      invalidateHoverCache();
       logger.info(`[filewatcher] package.json changed: ${filePath}`);
     },
   });
@@ -91,6 +95,7 @@ connection.onInitialize((params: InitializeParams): InitializeResult => {
     capabilities: {
       textDocumentSync: TextDocumentSyncKind.Incremental,
       definitionProvider: true,
+      hoverProvider: true,
     },
   };
 });
@@ -123,6 +128,20 @@ connection.onDefinition(async (params) => {
   } catch (err) {
     connection.console.error(
       `Definition error: ${err instanceof Error ? err.message : String(err)}`
+    );
+    return null;
+  }
+});
+
+connection.onHover(async (params) => {
+  const doc = documents.get(params.textDocument.uri);
+  if (!doc) return null;
+
+  try {
+    return getHover(doc, params.position, tsconfigResolver, logger);
+  } catch (err) {
+    connection.console.error(
+      `Hover error: ${err instanceof Error ? err.message : String(err)}`
     );
     return null;
   }

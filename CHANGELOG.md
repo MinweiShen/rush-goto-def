@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0] - 2026-02-24
+
+### Added
+
+- Hover support: show type signatures and JSDoc documentation when hovering over symbols
+- Uses TypeScript Language Service for accurate type information
+
 ## [0.2.3] - 2026-02-24
 
 ### Fixed

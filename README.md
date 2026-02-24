@@ -10,11 +10,12 @@ A lightweight VS Code extension that provides fast "Go to Definition" for TypeSc
 - **Path alias support**: Reads `compilerOptions.paths` from tsconfig.json
 - **Rush/pnpm symlink support**: Resolves symlinked packages via `realpath`
 - **`.d.ts` → source mapping**: Jumps to `.ts` source files instead of declaration files
+- **Hover support**: Shows type signatures and JSDoc documentation on hover
 - **Coexists with tsserver**: VS Code merges results from both providers
 
 ## What it does NOT do
 
-This extension **only** provides Go to Definition. No diagnostics, no completions, no hover, no refactoring. Those continue to come from the built-in TypeScript language server.
+This extension provides Go to Definition and Hover. No diagnostics, no completions, no refactoring. Those continue to come from the built-in TypeScript language server.
 
 ## Installation
 
@@ -23,7 +24,7 @@ This extension **only** provides Go to Definition. No diagnostics, no completion
 Download the latest `.vsix` from [GitHub Releases](https://github.com/MinweiShen/rush-goto-def/releases), then:
 
 ```bash
-code --install-extension rush-goto-def-0.2.3.vsix
+code --install-extension rush-goto-def-0.3.0.vsix
 ```
 
 Or in VS Code: Extensions sidebar → `...` menu → "Install from VSIX..."
