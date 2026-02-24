@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.2] - 2026-02-24
+
+### Changed
+- README: added section on coexisting with the built-in TypeScript LSP (recommended VS Code settings)
+- README: added section on disabling the built-in TypeScript LSP for isolated testing (4 options with step-by-step instructions)
+
 ## [0.2.1] - 2026-02-24
 
 ### Fixed
