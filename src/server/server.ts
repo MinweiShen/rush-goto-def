@@ -33,6 +33,7 @@ const LOG_LEVELS: Record<string, number> = {
 };
 
 let currentLogLevel = LOG_LEVELS["warn"]; // default
+let hoverEnabled = false; // default disabled
 
 function createLogger(): Logger {
   return {
@@ -48,11 +49,12 @@ function createLogger(): Logger {
   };
 }
 
-async function updateLogLevel(): Promise<void> {
+async function updateConfig(): Promise<void> {
   try {
     const config = await connection.workspace.getConfiguration("rushGotoDef");
     const level = config?.logLevel ?? "warn";
     currentLogLevel = LOG_LEVELS[level] ?? LOG_LEVELS["warn"];
+    hoverEnabled = config?.enableHover ?? false;
   } catch {
     // Config not available yet, keep default
   }
@@ -117,14 +119,14 @@ connection.onInitialize((params: InitializeParams): InitializeResult => {
 
 connection.onInitialized(async () => {
   connection.client.register(DidChangeConfigurationNotification.type);
-  await updateLogLevel();
+  await updateConfig();
   fileWatcher.start();
   connection.console.info("[server] File watcher started.");
 });
 
 connection.onDidChangeConfiguration(async () => {
-  await updateLogLevel();
-  logger.info(`[server] Log level changed to: ${Object.entries(LOG_LEVELS).find(([, v]) => v === currentLogLevel)?.[0] ?? "warn"}`);
+  await updateConfig();
+  logger.info(`[server] Config updated - logLevel: ${Object.entries(LOG_LEVELS).find(([, v]) => v === currentLogLevel)?.[0] ?? "warn"}, hover: ${hoverEnabled}`);
 });
 
 connection.onDefinition(async (params) => {
@@ -149,6 +151,8 @@ connection.onDefinition(async (params) => {
 });
 
 connection.onHover(async (params) => {
+  if (!hoverEnabled) return null;
+
   const doc = documents.get(params.textDocument.uri);
   if (!doc) return null;
 

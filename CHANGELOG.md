@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1] - 2026-02-24
+
+### Changed
+
+- Hover is now disabled by default (set `rushGotoDef.enableHover: true` to enable)
+- Improved Rush lock file detection to support both `rush#*.lock` and `rush.lock` patterns
+
 ## [0.3.0] - 2026-02-24
 
 ### Added

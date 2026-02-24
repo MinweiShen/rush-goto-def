@@ -24,7 +24,7 @@ This extension provides Go to Definition and Hover. No diagnostics, no completio
 Download the latest `.vsix` from [GitHub Releases](https://github.com/MinweiShen/rush-goto-def/releases), then:
 
 ```bash
-code --install-extension rush-goto-def-0.3.0.vsix
+code --install-extension rush-goto-def-0.3.1.vsix
 ```
 
 Or in VS Code: Extensions sidebar → `...` menu → "Install from VSIX..."
@@ -146,10 +146,11 @@ This causes tsserver to fail to start, effectively disabling it. To re-enable, r
 
 ## Settings
 
-| Setting                | Default  | Description                                                 |
-| ---------------------- | -------- | ----------------------------------------------------------- |
-| `rushGotoDef.enable`   | `true`   | Enable/disable the extension                                |
-| `rushGotoDef.logLevel` | `"warn"` | Logging verbosity (`off`, `error`, `warn`, `info`, `debug`) |
+| Setting                   | Default  | Description                                                        |
+| ------------------------- | -------- | ------------------------------------------------------------------ |
+| `rushGotoDef.enable`      | `true`   | Enable/disable the extension                                       |
+| `rushGotoDef.logLevel`    | `"warn"` | Logging verbosity (`off`, `error`, `warn`, `info`, `debug`)        |
+| `rushGotoDef.enableHover` | `false`  | Enable hover to show type signatures (uses more memory and slower) |
 
 ## How it works
 

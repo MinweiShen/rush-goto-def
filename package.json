@@ -2,7 +2,7 @@
   "name": "rush-goto-def",
   "displayName": "Rush Go to Definition",
   "description": "Lightweight Go to Definition for Rush monorepos — fast, low memory, no diagnostics.",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "publisher": "local",
   "license": "MIT",
   "icon": "icon.png",
@@ -41,6 +41,11 @@
             "debug"
           ],
           "description": "Logging verbosity for the extension server."
+        },
+        "rushGotoDef.enableHover": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable hover to show type signatures and documentation. Disabled by default as it uses more memory."
         }
       }
     }
