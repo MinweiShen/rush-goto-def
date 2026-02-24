@@ -2,6 +2,8 @@ import * as ts from "typescript";
 import * as fs from "fs";
 import * as path from "path";
 
+const BUILD_SUBDIRS = new Set(["cjs", "esm", "mjs", "commonjs", "types", "typings", "module"]);
+
 export class ModuleResolver {
   /** `${containingFile}::${moduleName}` → resolved file path */
   private cache = new Map<string, string | null>();
@@ -104,6 +106,18 @@ export class ModuleResolver {
             return candidate;
           }
         }
+        // Strip build sub-dirs (cjs, esm, etc.) from the remaining path
+        // e.g. dist/cjs/utils/foo.d.ts → src/utils/foo.ts
+        const parts = sourceRelative.split(path.sep);
+        if (parts.length > 1 && BUILD_SUBDIRS.has(parts[0])) {
+          const stripped = parts.slice(1).join(path.sep);
+          for (const ext of [".ts", ".tsx"]) {
+            const candidate = path.join(before, "src", stripped + ext);
+            if (fs.existsSync(candidate)) {
+              return candidate;
+            }
+          }
+        }
       }
     }
 
@@ -113,8 +127,12 @@ export class ModuleResolver {
       const relative = path.relative(pkgRoot, base);
       // Strip leading output dir from relative path (e.g. "dist/utils/foo" → "utils/foo")
       const parts = relative.split(path.sep);
-      const strippedParts =
+      let strippedParts =
         OUTPUT_DIRS.includes(parts[0]) ? parts.slice(1) : parts;
+      // Strip build sub-dir (cjs, esm, etc.)
+      if (strippedParts.length > 1 && BUILD_SUBDIRS.has(strippedParts[0])) {
+        strippedParts = strippedParts.slice(1);
+      }
       const stripped = strippedParts.join(path.sep);
       for (const ext of [".ts", ".tsx"]) {
         const candidate = path.join(pkgRoot, "src", stripped + ext);

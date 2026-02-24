@@ -119,4 +119,24 @@ describe("ModuleResolver", () => {
     expect(result!).toContain("math.ts");
     expect(result!).not.toContain(".d.ts");
   });
+
+  it("maps .d.ts to source .ts with nested output subdirs (dist/cjs)", () => {
+    const resolver = new ModuleResolver();
+    const containingFile = path.join(
+      FIXTURE_ROOT,
+      "packages/utils/dist/cjs/index.d.ts"
+    );
+    const result = resolver.resolve(
+      "./math",
+      containingFile,
+      getOptions(path.join(FIXTURE_ROOT, "packages/utils/src/index.ts"))
+    );
+
+    expect(result).toBeDefined();
+    // Should resolve to src/math.ts, NOT dist/cjs/math.d.ts
+    expect(result!).toContain("src");
+    expect(result!).toContain("math.ts");
+    expect(result!).not.toContain(".d.ts");
+    expect(result!).not.toContain("cjs");
+  });
 });

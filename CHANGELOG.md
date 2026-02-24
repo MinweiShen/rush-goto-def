@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.2] - 2026-02-24
+
+### Fixed
+
+- Fix go-to-definition resolving to `.d.ts` instead of source when packages have nested output directories (`dist/cjs/`, `dist/esm/`, etc.)
+
 ## [0.2.1] - 2026-02-24
 
 ### Fixed

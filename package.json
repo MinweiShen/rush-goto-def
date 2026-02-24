@@ -2,7 +2,7 @@
   "name": "rush-goto-def",
   "displayName": "Rush Go to Definition",
   "description": "Lightweight Go to Definition for Rush monorepos — fast, low memory, no diagnostics.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "publisher": "local",
   "license": "MIT",
   "icon": "icon.png",
