@@ -15,8 +15,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: npm
-      - run: npm ci
+      - run: npm install
       - run: npm run build
       - run: npm test
 
@@ -31,8 +30,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: npm
-      - run: npm ci
+      - run: npm install
       - run: npm run build
       - name: Verify tag matches package.json version
         run: |
