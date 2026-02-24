@@ -1,0 +1,67 @@
+{
+  "name": "rush-goto-def",
+  "displayName": "Rush Go to Definition",
+  "description": "Lightweight Go to Definition for Rush monorepos — fast, low memory, no diagnostics.",
+  "version": "0.2.1",
+  "publisher": "local",
+  "license": "MIT",
+  "icon": "icon.png",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onLanguage:typescript",
+    "onLanguage:typescriptreact"
+  ],
+  "main": "./dist/client/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Rush Go to Definition",
+      "properties": {
+        "rushGotoDef.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable the Rush Go to Definition extension."
+        },
+        "rushGotoDef.logLevel": {
+          "type": "string",
+          "default": "warn",
+          "enum": [
+            "off",
+            "error",
+            "warn",
+            "info",
+            "debug"
+          ],
+          "description": "Logging verbosity for the extension server."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node esbuild.mjs",
+    "watch": "node esbuild.mjs --watch",
+    "test": "vitest run",
+    "package": "npx @vscode/vsce package --no-dependencies"
+  },
+  "dependencies": {
+    "chokidar": "^3.6.0",
+    "typescript": "^5.3.3",
+    "vscode-languageclient": "^9.0.1",
+    "vscode-languageserver": "^9.0.1",
+    "vscode-languageserver-textdocument": "^1.0.11"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^2.22.0",
+    "esbuild": "^0.20.0",
+    "vitest": "^1.0.0"
+  },
+  "overrides": {
+    "undici": "6.21.1"
+  }
+}

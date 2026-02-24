@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "@monorepo/ui": ["packages/ui/src/index.ts"],
+      "@monorepo/ui/*": ["packages/ui/src/*"],
+      "@monorepo/utils": ["packages/utils/src/index.ts"],
+      "@monorepo/utils/*": ["packages/utils/src/*"]
+    }
+  }
+}
