@@ -46,8 +46,8 @@
     }
   },
   "scripts": {
-    "build": "node esbuild.mjs",
-    "watch": "node esbuild.mjs --watch",
+    "build": "node esbuild.js",
+    "watch": "node esbuild.js --watch",
     "test": "vitest run",
     "package": "npx @vscode/vsce package --no-dependencies"
   },
