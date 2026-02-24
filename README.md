@@ -76,6 +76,7 @@ Add to your `.vscode/settings.json` (workspace) or user settings:
 ```
 
 **How it works in practice:**
+
 - If tsserver is healthy → both providers respond, VS Code deduplicates or jumps to the first result
 - If tsserver is slow or crashed → this extension still responds in ~5ms, so Go to Definition keeps working
 - This extension never interferes with tsserver's diagnostics, completions, hover, or refactoring
@@ -84,7 +85,23 @@ Add to your `.vscode/settings.json` (workspace) or user settings:
 
 To test this extension in isolation or to free up memory, you can disable the built-in TypeScript language server. **Note:** this removes all other TypeScript IDE features (diagnostics, completions, hover, formatting, etc.) — only Go to Definition from this extension will remain.
 
-### Option A: Disable for the current workspace only (recommended for testing)
+### Option A: Via CLI
+
+```bash
+# List built-in extensions
+code --list-extensions --show-versions | grep typescript
+
+# Disable it (this should disable it only once)
+code  --disable-extension vscode.typescript-language-features
+```
+
+To re-enable (if not enabled by default):
+
+```bash
+code --enable-extension vscode.typescript-language-features
+```
+
+### Option B: Disable for the current workspace only (recommended for testing)
 
 1. Open Extensions sidebar (Cmd+Shift+X)
 2. Type `@builtin typescript` in the search bar
@@ -94,11 +111,11 @@ To test this extension in isolation or to free up memory, you can disable the bu
 
 This keeps tsserver active in your other projects.
 
-### Option B: Disable globally
+### Option C: Disable globally
 
 Same as Option A, but click **Disable** instead of "Disable (Workspace)". Affects all VS Code windows.
 
-### Option C: Via settings.json
+### Option D: Via settings.json
 
 ```jsonc
 {
@@ -111,21 +128,6 @@ Same as Option A, but click **Disable** instead of "Disable (Workspace)". Affect
 ```
 
 This causes tsserver to fail to start, effectively disabling it. To re-enable, remove the line and reload.
-
-### Option D: Via CLI
-
-```bash
-# List built-in extensions
-code --list-extensions --show-versions | grep typescript
-
-# Disable it
-code --disable-extension vscode.typescript-language-features
-```
-
-To re-enable:
-```bash
-code --enable-extension vscode.typescript-language-features
-```
 
 ### Verifying this extension is working alone
 
@@ -143,9 +145,9 @@ code --enable-extension vscode.typescript-language-features
 
 ## Settings
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `rushGotoDef.enable` | `true` | Enable/disable the extension |
+| Setting                | Default  | Description                                                 |
+| ---------------------- | -------- | ----------------------------------------------------------- |
+| `rushGotoDef.enable`   | `true`   | Enable/disable the extension                                |
 | `rushGotoDef.logLevel` | `"warn"` | Logging verbosity (`off`, `error`, `warn`, `info`, `debug`) |
 
 ## How it works
@@ -162,6 +164,7 @@ Cmd+click on symbol
 ```
 
 Key design choices:
+
 - **No tree-sitter** — reuses the `typescript` package already needed for module resolution
 - **Lazy indexing** — files parsed on first access, cached with mtime-based invalidation
 - **Cache cap**: 5,000 files (~10MB)
