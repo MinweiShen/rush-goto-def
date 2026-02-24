@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.3] - 2026-02-24
+
+### Fixed
+
+- Fix symbol extraction breaking on identifiers containing digits (e.g. `S2SImpression` was incorrectly extracted as `SImpression`)
+
 ## [0.2.2] - 2026-02-24
 
 ### Fixed

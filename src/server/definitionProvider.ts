@@ -373,17 +373,17 @@ function getWordRangeAtOffset(
 ): { start: number; end: number } | null {
   if (offset < 0 || offset >= text.length) return null;
 
-  const wordPattern = /[a-zA-Z_$][a-zA-Z0-9_$]*/;
+  const wordChar = /[a-zA-Z0-9_$]/;
 
   // Find start of word
   let start = offset;
-  while (start > 0 && wordPattern.test(text[start - 1])) {
+  while (start > 0 && wordChar.test(text[start - 1])) {
     start--;
   }
 
   // Find end of word
   let end = offset;
-  while (end < text.length && wordPattern.test(text[end])) {
+  while (end < text.length && wordChar.test(text[end])) {
     end++;
   }
 

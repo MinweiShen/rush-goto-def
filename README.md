@@ -23,7 +23,7 @@ This extension **only** provides Go to Definition. No diagnostics, no completion
 Download the latest `.vsix` from [GitHub Releases](https://github.com/MinweiShen/rush-goto-def/releases), then:
 
 ```bash
-code --install-extension rush-goto-def-0.2.2.vsix
+code --install-extension rush-goto-def-0.2.3.vsix
 ```
 
 Or in VS Code: Extensions sidebar → `...` menu → "Install from VSIX..."
