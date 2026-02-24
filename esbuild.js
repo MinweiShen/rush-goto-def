@@ -27,7 +27,7 @@ const serverBuild = esbuild[watch ? "context" : "build"]({
   ...sharedOptions,
   entryPoints: ["src/server/server.ts"],
   outfile: "dist/server/server.js",
-  external: ["typescript"],
+  external: ["typescript", "fsevents"],
 });
 
 async function main() {

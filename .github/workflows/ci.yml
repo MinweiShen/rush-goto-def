@@ -14,10 +14,16 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
-      - run: npm install
+          node-version: 20
+      - run: npm ci
       - run: npm run build
       - run: npm test
+      - name: Upload npm logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-debug-logs-build
+          path: ~/.npm/_logs/
 
   release:
     needs: build
@@ -29,8 +35,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
-      - run: npm install
+          node-version: 20
+      - run: npm ci
       - run: npm run build
       - name: Verify tag matches package.json version
         run: |
@@ -47,3 +53,9 @@ jobs:
         with:
           files: "*.vsix"
           generate_release_notes: true
+      - name: Upload npm logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-debug-logs-release
+          path: ~/.npm/_logs/
