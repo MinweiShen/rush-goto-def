@@ -48,11 +48,21 @@ jobs:
           fi
       - name: Package VSIX
         run: npx @vscode/vsce package --no-dependencies
+      - name: Extract changelog for this version
+        id: changelog
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          # Extract section between this version header and the next version header
+          NOTES=$(awk "/^## \[${VERSION}\]/{flag=1; next} /^## \[/{flag=0} flag" CHANGELOG.md)
+          # Handle multiline output for GitHub Actions
+          echo "notes<<EOF" >> $GITHUB_OUTPUT
+          echo "$NOTES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: "*.vsix"
-          generate_release_notes: true
+          body: ${{ steps.changelog.outputs.notes }}
       - name: Upload npm logs
         if: failure()
         uses: actions/upload-artifact@v4
