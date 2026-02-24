@@ -3,7 +3,7 @@
   "displayName": "Rush Go to Definition",
   "description": "Lightweight Go to Definition for Rush monorepos — fast, low memory, no diagnostics.",
   "version": "0.2.4",
-  "publisher": "shenminwei@bytedance.com",
+  "publisher": "local",
   "license": "MIT",
   "icon": "icon.png",
   "repository": {
