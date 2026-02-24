@@ -1,20 +1,16 @@
 # Changelog
 
-## [0.2.2] - 2026-02-24
-
-### Changed
-- README: added section on coexisting with the built-in TypeScript LSP (recommended VS Code settings)
-- README: added section on disabling the built-in TypeScript LSP for isolated testing (4 options with step-by-step instructions)
-
 ## [0.2.1] - 2026-02-24
 
 ### Fixed
+
 - Logger now respects the `rushGotoDef.logLevel` setting (was logging everything regardless of configured level)
 - Log level is fetched from VS Code configuration on startup and updated dynamically when the setting changes
 
 ## [0.2.0] - 2026-02-24
 
 ### Added
+
 - Extension icon/logo
 - Detailed logging in VS Code Output panel ("Rush Go to Definition")
   - Server lifecycle events (init, file watcher start)
@@ -30,6 +26,7 @@
 ## [0.1.0] - 2026-02-24
 
 ### Added
+
 - Initial release
 - LSP-based Go to Definition for TypeScript/TSX files
 - `tsconfig.json` resolution with `extends` chain support
