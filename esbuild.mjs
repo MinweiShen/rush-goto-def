@@ -1,4 +1,5 @@
 import esbuild from "esbuild";
+import { mkdirSync, writeFileSync } from "fs";
 
 const watch = process.argv.includes("--watch");
 
@@ -21,12 +22,12 @@ const clientBuild = esbuild[watch ? "context" : "build"]({
   external: ["vscode"],
 });
 
-// Server bundle — everything bundled except node built-ins
+// Server bundle — typescript is external (copied separately to reduce bundle size)
 const serverBuild = esbuild[watch ? "context" : "build"]({
   ...sharedOptions,
   entryPoints: ["src/server/server.ts"],
   outfile: "dist/server/server.js",
-  external: [],
+  external: ["typescript"],
 });
 
 if (watch) {
@@ -35,5 +36,22 @@ if (watch) {
   console.log("[watch] Watching for changes...");
 } else {
   await Promise.all([clientBuild, serverBuild]);
+
+  // Copy typescript as a minified standalone file for the packaged extension.
+  // At runtime, require("typescript") resolves to dist/server/node_modules/typescript.
+  const tsOutDir = "dist/server/node_modules/typescript";
+  mkdirSync(`${tsOutDir}/lib`, { recursive: true });
+  await esbuild.build({
+    entryPoints: ["node_modules/typescript/lib/typescript.js"],
+    outfile: `${tsOutDir}/lib/typescript.js`,
+    bundle: false,
+    minify: true,
+    platform: "node",
+  });
+  writeFileSync(
+    `${tsOutDir}/package.json`,
+    '{"name":"typescript","main":"lib/typescript.js"}'
+  );
+
   console.log("Build complete.");
 }

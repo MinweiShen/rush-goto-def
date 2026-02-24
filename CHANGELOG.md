@@ -5,6 +5,7 @@
 ### Fixed
 
 - Fix go-to-definition resolving to `.d.ts` instead of source when packages have nested output directories (`dist/cjs/`, `dist/esm/`, etc.)
+- Reduce packaged server bundle from 3.66 MB to 251 KB by externalizing TypeScript
 
 ## [0.2.1] - 2026-02-24
 

@@ -18,17 +18,12 @@ This extension **only** provides Go to Definition. No diagnostics, no completion
 
 ## Installation
 
-### From .vsix file
+### From GitHub Releases
+
+Download the latest `.vsix` from [GitHub Releases](https://github.com/MinweiShen/rush-goto-def/releases), then:
 
 ```bash
-# Build
-cd rush-goto-def
-npm install
-npm run build
-npx @vscode/vsce package --no-dependencies
-
-# Install
-code --install-extension rush-goto-def-0.1.0.vsix
+code --install-extension rush-goto-def-0.2.2.vsix
 ```
 
 Or in VS Code: Extensions sidebar → `...` menu → "Install from VSIX..."
