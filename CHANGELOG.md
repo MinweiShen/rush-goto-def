@@ -6,6 +6,7 @@
 
 - Hover support: show type signatures and JSDoc documentation when hovering over symbols
 - Uses TypeScript Language Service for accurate type information
+- Smart Rush build detection: file watcher automatically pauses during `rush build` to prevent slowdowns, then invalidates caches when build completes
 
 ## [0.2.3] - 2026-02-24
 

@@ -56,6 +56,10 @@ export class SymbolIndex {
     this.cache.delete(path.resolve(filePath));
   }
 
+  invalidateAll(): void {
+    this.cache.clear();
+  }
+
   private evict(): void {
     // Remove least recently accessed entries to get back to 80% capacity
     const targetSize = MAX_CACHE_SIZE * 0.8;

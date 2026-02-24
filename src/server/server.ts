@@ -75,6 +75,15 @@ connection.onInitialize((params: InitializeParams): InitializeResult => {
       logger.info(`[filewatcher] TS file changed: ${filePath}`);
     },
     onTsconfigChange(filePath: string) {
+      // "__all__" is a sentinel for full invalidation after Rush build
+      if (filePath === "__all__") {
+        tsconfigResolver = new TsconfigResolver();
+        moduleResolver.invalidateAll();
+        symbolIndex.invalidateAll();
+        invalidateHoverCache();
+        logger.info("[filewatcher] Full cache invalidation after Rush build");
+        return;
+      }
       tsconfigResolver.invalidate(filePath);
       moduleResolver.invalidateAll();
       invalidateHoverCache();
@@ -84,6 +93,12 @@ connection.onInitialize((params: InitializeParams): InitializeResult => {
       moduleResolver.invalidateAll();
       invalidateHoverCache();
       logger.info(`[filewatcher] package.json changed: ${filePath}`);
+    },
+    onRushBuildStart() {
+      logger.info("[filewatcher] Rush build detected, pausing file watcher");
+    },
+    onRushBuildEnd() {
+      logger.info("[filewatcher] Rush build finished, resuming file watcher");
     },
   });
 
