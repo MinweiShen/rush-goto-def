@@ -1,5 +1,8 @@
-import esbuild from "esbuild";
+import { createRequire } from "module";
 import { mkdirSync, writeFileSync } from "fs";
+
+const require = createRequire(import.meta.url);
+const esbuild = require("esbuild");
 
 const watch = process.argv.includes("--watch");
 
